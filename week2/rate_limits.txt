@@ -1,0 +1,3 @@
+gemini-2.5-flash 42 67 123
+gemini-2.5-flash-lite 4.2 67 12.3B
+gemini-3-flash-preview 123 456K 4M
