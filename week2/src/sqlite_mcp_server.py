@@ -39,10 +39,39 @@ def _fetch_pending_rows(after_rowid: int, batch_size: int, db_path: str | None =
         return [dict(row) for row in cursor.fetchall()]
 
 
+def _fetch_tagged_rows(after_rowid: int, batch_size: int, db_path: str | None = None) -> list[dict[str, object]]:
+    resolved_db_path = _db_path(db_path)
+    if not resolved_db_path.exists():
+        return []
+
+    with sqlite3.connect(resolved_db_path) as connection:
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+        cursor.execute(
+            """
+            SELECT rowid, source_id, job_title, tech_stack
+            FROM jobs
+            WHERE rowid > ?
+              AND tech_stack IS NOT NULL
+              AND TRIM(tech_stack) != ''
+            ORDER BY rowid
+            LIMIT ?
+            """,
+            (after_rowid, batch_size),
+        )
+        return [dict(row) for row in cursor.fetchall()]
+
+
 @mcp.tool
 def fetch_pending_jobs(after_rowid: int = 0, batch_size: int = 5, db_path: str = "") -> list[dict[str, object]]:
     """Return the next batch of jobs that still need tech stack tagging."""
     return _fetch_pending_rows(after_rowid, batch_size, db_path)
+
+
+@mcp.tool
+def fetch_tagged_jobs(after_rowid: int = 0, batch_size: int = 200, db_path: str = "") -> list[dict[str, object]]:
+    """Return the next batch of jobs with a populated tech stack."""
+    return _fetch_tagged_rows(after_rowid, batch_size, db_path)
 
 
 @mcp.tool

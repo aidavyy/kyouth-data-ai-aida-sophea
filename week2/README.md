@@ -113,3 +113,24 @@ If you want to pass a specific database path explicitly, use:
 uv run tag_data.py C:\path\to\jobs_d1.db
 ```
 
+## Day 3-4 : Skill Gaps
+This task identifies skill gaps for each job by comparing the `tech_stack` against a predefined list of in-demand technologies. The results are stored in a new `skill_gaps` column.
+
+### Requirements
+- The script reads from the same SQLite database and processes rows with non-empty `tech_stack` values.
+- For each job, it determines which in-demand technologies are missing from the `tech_stack` and writes these as comma-separated values in the `skill_gaps` column.
+- The script handles errors gracefully and logs updates to standard output.     
+
+### Run Command
+Use this command from inside the `week2` folder:
+
+```powershell
+uv run find_skill_gaps.py
+```
+
+If you want to pass a specific database path explicitly, use:
+
+```powershell
+uv run find_skill_gaps.py C:\path\to\jobs_d1.db
+``` 
+
