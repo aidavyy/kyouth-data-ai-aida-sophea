@@ -4,8 +4,6 @@ version = "0.1.0"
 requires-python = ">=3.14"
 # Add pinned dependencies as a TOML array. Keep empty if none are required.
 dependencies = [
-	# Example pinned dependency (uncomment if needed):
-	# "httpx==0.24.1",
 	"fastmcp",
 	"google-genai",
 ]

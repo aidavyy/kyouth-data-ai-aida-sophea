@@ -87,3 +87,29 @@ uv run python prompt_model.py gemini-2.5-flash "tell me one malasyian joke"
 - Use local Ollama models for offline testing and Gemini for cloud-based prompting.
 - If `uv run` tries to create a new environment unexpectedly, stay inside `week2` and run the command shown above.
 - The prompt script prints `--- RESPONSE ---` and always returns a string, even when a provider call fails.
+
+## Day 1-2: Tagging
+
+This task enriches the `tech_stack` column in the SQLite `jobs` table by reading each job description, inferring the technologies used, and writing back comma-separated tags.
+
+### Requirements
+
+- Use a SQLite database file such as `jobs_d1.db` or the week 1 gold database.
+- Only rows with an empty `tech_stack` value are tagged.
+- Updates are processed in batches and each written stack is logged to standard output.
+- The script handles missing databases and runtime errors gracefully.
+
+### Run Command
+
+Use this command from inside the `week2` folder:
+
+```powershell
+uv run tag_data.py
+```
+
+If you want to pass a specific database path explicitly, use:
+
+```powershell
+uv run tag_data.py C:\path\to\jobs_d1.db
+```
+
