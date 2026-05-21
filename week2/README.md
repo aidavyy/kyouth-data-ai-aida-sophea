@@ -1,136 +1,169 @@
-# Week 2
+# kyouth-data-ai-aida-sophea Module 2
 
-Week 2 focuses on model prompting with both local Ollama and Google Gemini.
+Week 2 extends the project with model prompting, job data enrichment, and skill gap analysis.
+
+## Project Description
+
+This folder contains three main scripts:
+- `prompt_model.py`: routes prompts to local Ollama or Google Gemini.
+- `tag_data.py`: enriches `jobs` records by inferring missing `tech_stack` tags.
+- `find_skill_gaps.py`: computes missing in-demand skills from tagged job records.
+
+The goal is to support offline testing with Ollama while also allowing cloud-based prompting through Gemini when available.
+
+## Project Structure
+
+```text
+week2/
+  prompt_model.py          # model prompt wrapper for Ollama and Gemini
+  tag_data.py             # batch job tagging for missing tech_stack values
+  find_skill_gaps.py      # skills gap extraction from job records
+  pyproject.toml          # Python 3.14 project dependencies
+  rate_limits.txt         # Gemini rate limit placeholders
+  data/
+    resume_d3.txt         # example resume text for skill extraction
+    jobs_d1.db            # sample SQLite database candidate
+  src/
+    sqlite_mcp_server.py  # local SQLite MCP helper module (supporting data work)
+```
 
 ## Project Setup
 
-Create and activate a virtual environment from inside `week2`:
+### Local Python environment
+
+From the `week2` folder:
 
 ```powershell
-cd C:\Users\aida.zaki\kyouth-data-ai-aida\week2
+cd C:\Users\aida.zaki\kyouth-data-ai-aida-sophea\week2
 uv venv .venv --python 3.14
 .\.venv\Scripts\Activate.ps1
-```
-
-Install dependencies from `pyproject.toml`:
-
-```powershell
 uv lock
 uv sync
 ```
 
-## Ollama Setup
+### Optional: Ollama setup
 
-Install Ollama on Windows:
+If you want to use local model prompting, install Ollama and pull the models:
 
 ```powershell
 irm https://ollama.com/install.ps1 | iex
+ollama pull llama3.1
+ollama pull phi3
+ollama pull deepseek-r1:1.5b
 ```
 
-Verify Ollama is running:
+Verify Ollama with:
 
 ```powershell
 ollama -v
 Invoke-RestMethod http://127.0.0.1:11434/
 ```
 
-Pull the required local models:
+### Optional: Google Gemini setup
 
-```powershell
-ollama pull llama3.1
-ollama pull phi3
-ollama pull deepseek-r1:1.5b
-```
-
-If the first prompt is slow, the model may still be loading in the background.
-
-## Google AI Studio Setup
-
-Create a free API key at:
+Create a Google AI Studio API key at:
 
 https://aistudio.google.com/
 
-Set the API key in your current terminal session:
+Then set it in PowerShell:
 
 ```powershell
 $env:GOOGLE_API_KEY="your_key_here"
 ```
 
-Do not commit the API key to the repository.
+Do not store the key in the repository.
 
-## Rate Limits
+## Usage
 
-Store the Google model rate limits in `rate_limits.txt` using this format:
+### Project Setup
 
-```text
-gemini-2.5-flash <RPM> <TPM> <RPD>
-gemini-2.5-flash-lite <RPM> <TPM> <RPD>
-gemini-3-flash-preview <RPM> <TPM> <RPD>
-```
-
-## Run The Prompt Script
-
-The script accepts a model name and a prompt. Use the Python form below, which is the most reliable on this workspace:
+#### Prompt a model
 
 ```powershell
-uv run python prompt_model.py llama3.1 "tell me one malasyian joke"
+uv run python prompt_model.py llama3.1 "tell me one Malaysian joke"
 ```
 
-Example Gemini call:
+For Gemini:
 
 ```powershell
-uv run python prompt_model.py gemini-2.5-flash "tell me one malasyian joke"
+uv run python prompt_model.py gemini-2.5-flash "tell me one Malaysian joke"
 ```
 
-## Notes
+### Day 1 - 2
 
-- Use local Ollama models for offline testing and Gemini for cloud-based prompting.
-- If `uv run` tries to create a new environment unexpectedly, stay inside `week2` and run the command shown above.
-- The prompt script prints `--- RESPONSE ---` and always returns a string, even when a provider call fails.
-
-## Day 1-2: Tagging
-
-This task enriches the `tech_stack` column in the SQLite `jobs` table by reading each job description, inferring the technologies used, and writing back comma-separated tags.
-
-### Requirements
-
-- Use a SQLite database file such as `jobs_d1.db` or the week 1 gold database.
-- Only rows with an empty `tech_stack` value are tagged.
-- Updates are processed in batches and each written stack is logged to standard output.
-- The script handles missing databases and runtime errors gracefully.
-
-### Run Command
-
-Use this command from inside the `week2` folder:
+#### Tag missing job tech stacks
 
 ```powershell
 uv run tag_data.py
 ```
 
-If you want to pass a specific database path explicitly, use:
+With explicit database path:
 
 ```powershell
-uv run tag_data.py C:\path\to\jobs_d1.db
+uv run tag_data.py C:\Users\aida.zaki\kyouth-data-ai-aida-sophea\week2\data\jobs_d1.db
 ```
 
-## Day 3-4 : Skill Gaps
-This task identifies skill gaps for each job by comparing the `tech_stack` against a predefined list of in-demand technologies. The results are stored in a new `skill_gaps` column.
+### Day 3 - 4
 
-### Requirements
-- The script reads from the same SQLite database and processes rows with non-empty `tech_stack` values.
-- For each job, it determines which in-demand technologies are missing from the `tech_stack` and writes these as comma-separated values in the `skill_gaps` column.
-- The script handles errors gracefully and logs updates to standard output.     
-
-### Run Command
-Use this command from inside the `week2` folder:
+#### Compute skill gaps
 
 ```powershell
 uv run find_skill_gaps.py
 ```
 
-If you want to pass a specific database path explicitly, use:
+With explicit database path:
 
 ```powershell
-uv run find_skill_gaps.py C:\path\to\jobs_d1.db
-``` 
+uv run find_skill_gaps.py C:\Users\aida.zaki\kyouth-data-ai-aida-sophea\week2\data\resume_d3.txt
+```
 
+## Key Scripts
+
+### `prompt_model.py`
+- Routes prompts to:
+  - local Ollama for models like `llama3.1`
+  - Google Gemini for models starting with `gemini-`
+- Returns generated text or a descriptive error string.
+- Uses standard library networking and retry logic.
+
+### `tag_data.py`
+- Finds a SQLite jobs database.
+- Enriches empty `tech_stack` rows with short tag lists.
+- Uses Gemini when `GOOGLE_API_KEY` is set.
+- Falls back to deterministic rule-based tagging when no API key is available.
+
+### `find_skill_gaps.py`
+- Reads jobs with non-empty `tech_stack`.
+- Maps job tags to canonical skills.
+- Writes missing `skill_gaps` values back to the database.
+- Includes basic resume skill extraction support.
+
+## Data and Assumptions
+
+- Expected database structure:
+  - Table `jobs` with at least `rowid`, `source_id`, `job_title`, `tech_stack`.
+- Candidate files:
+  - `week2/data/jobs_d1.db`
+  - `week2/data/resume_d3.txt`
+- `tag_data.py` is designed for records with empty `tech_stack`.
+- `find_skill_gaps.py` is designed for records with existing `tech_stack` values.
+
+## Notes
+
+- `prompt_model.py` is resilient: it always returns a string, even on failure.
+- `tag_data.py` and `find_skill_gaps.py` both support optional explicit DB path arguments.
+- Rate limits for Gemini can be stored in `rate_limits.txt` if needed.
+
+## Limitations
+
+- Prompt accuracy depends on the chosen model and provider.
+- The `find_skill_gaps.py` matching logic is heuristic and based on pattern matching.
+- This module is built for educational/demo use, not production scaling.
+
+## Improvements
+
+If extended, the project could benefit from:
+- formal unit and integration tests
+- a shared database helper module
+- improved prompt validation and structured response parsing
+- explicit status reporting and dry-run support
