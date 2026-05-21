@@ -7,7 +7,7 @@ Week 2 focuses on model prompting with both local Ollama and Google Gemini.
 Create and activate a virtual environment from inside `week2`:
 
 ```powershell
-cd C:\Users\adam arbain\kyouth-data-ai-adam\week2
+cd C:\Users\aida.zaki\kyouth-data-ai-aida\week2
 uv venv .venv --python 3.14
 .\.venv\Scripts\Activate.ps1
 ```
