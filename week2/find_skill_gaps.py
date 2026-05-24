@@ -16,6 +16,9 @@ from typing import Any, Iterable
 from pydantic import BaseModel, Field
 
 
+# BATCH_SIZE controls how many job rows are fetched per request when using the
+# SQLite MCP transport. It is a batching/pagination size, not a token limit.
+# For example, 900 rows will typically be fetched in ceil(900 / 200) == 5 batches.
 BATCH_SIZE = 200
 MAX_RETRIES = 3
 RETRY_DELAY_SECONDS = 1.5
@@ -89,6 +92,7 @@ def _resolve_resume_path(input_file_path: str) -> Path | None:
 
     candidates.append(_script_dir() / "data" / "resume.txt")
     candidates.append(_script_dir() / "data" / "resume_d3.txt")
+    candidates.append(_script_dir() / "data" / "resume_d3_eval.txt")
 
     return _resolve_existing_path(candidates)
 
@@ -159,8 +163,12 @@ def _extract_resume_skill_block(text: str) -> str:
             continue
 
         upper = stripped.upper()
-        if upper == "SKILLS":
+        if re.match(r'^(TECHNICAL\s+)?SKILLS\s*:?(\s*$|\s+)', upper):
             in_skills = True
+            if ":" in stripped:
+                _, _, remainder = stripped.partition(":")
+                if remainder.strip():
+                    captured.append(remainder.strip())
             continue
         if in_skills and upper in {"CERTIFICATIONS", "PROJECTS", "EXPERIENCE", "SUMMARY", "EDUCATION"}:
             break

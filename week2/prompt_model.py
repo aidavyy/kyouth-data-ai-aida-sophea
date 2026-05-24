@@ -24,7 +24,30 @@ import sys
 import time
 import urllib.request
 import urllib.error
+from pathlib import Path
 from typing import Tuple
+
+
+def _load_dotenv(dotenv_path: str | Path | None = None) -> None:
+    path = Path(dotenv_path) if dotenv_path is not None else Path(__file__).resolve().parent / ".env"
+    if not path.exists():
+        return
+
+    try:
+        for raw_line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+            line = raw_line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            key = key.strip()
+            value = value.strip().strip('"').strip("'")
+            if key and key not in os.environ:
+                os.environ[key] = value
+    except Exception:
+        return
+
+
+_load_dotenv()
 
 def _safe_request(url: str, data: bytes | None = None, headers: dict | None = None, timeout: int = 10) -> Tuple[int, bytes]:
     headers = headers or {}

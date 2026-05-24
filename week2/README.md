@@ -71,7 +71,13 @@ Then set it in PowerShell:
 $env:GOOGLE_API_KEY="your_key_here"
 ```
 
-Do not store the key in the repository.
+Or create a local `.env` file in `week2` with the same assignment:
+
+```text
+GOOGLE_API_KEY=your_key_here
+```
+
+Do not store a real API key in version control.
 
 ## Usage
 
@@ -82,6 +88,8 @@ Do not store the key in the repository.
 ```powershell
 uv run python prompt_model.py llama3.1 "tell me one Malaysian joke"
 ```
+
+If Ollama is not running, local model requests such as `llama3.1` will fail with an Ollama error.
 
 For Gemini:
 
@@ -117,6 +125,8 @@ With explicit database path:
 uv run find_skill_gaps.py C:\Users\aida.zaki\kyouth-data-ai-aida-sophea\week2\data\resume_d3.txt
 ```
 
+This script also searches `week2/data/resume_d3_eval.txt` by default, so resumes with the same format will be recognized automatically.
+
 ## Key Scripts
 
 ### `prompt_model.py`
@@ -137,6 +147,7 @@ uv run find_skill_gaps.py C:\Users\aida.zaki\kyouth-data-ai-aida-sophea\week2\da
 - Maps job tags to canonical skills.
 - Writes missing `skill_gaps` values back to the database.
 - Includes basic resume skill extraction support.
+- Uses a default batch fetch size of `200` rows for MCP pagination.
 
 ## Data and Assumptions
 
