@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{{ title }}</title>
+	<style>
+		:root {
+			color-scheme: light;
+			--bg: #101828;
+			--panel: #f8fafc;
+			--text: #0f172a;
+			--muted: #475569;
+			--accent: #2563eb;
+		}
+		* {
+			box-sizing: border-box;
+		}
+		body {
+			margin: 0;
+			min-height: 100vh;
+			display: grid;
+			place-items: center;
+			font-family: Arial, sans-serif;
+			background:
+				radial-gradient(circle at top, rgba(37, 99, 235, 0.25), transparent 40%),
+				linear-gradient(160deg, #e2e8f0 0%, #cbd5e1 100%);
+			color: var(--text);
+		}
+		main {
+			width: min(640px, calc(100vw - 32px));
+			padding: 48px 40px;
+			background: rgba(248, 250, 252, 0.95);
+			border-radius: 28px;
+			box-shadow: 0 24px 80px rgba(15, 23, 42, 0.18);
+			text-align: center;
+		}
+		.badge {
+			display: inline-block;
+			padding: 6px 12px;
+			border-radius: 999px;
+			background: rgba(37, 99, 235, 0.12);
+			color: var(--accent);
+			font-weight: 700;
+			letter-spacing: 0.04em;
+			text-transform: uppercase;
+			font-size: 0.78rem;
+		}
+		h1 {
+			margin: 20px 0 12px;
+			font-size: clamp(2.5rem, 8vw, 4.5rem);
+			line-height: 0.95;
+		}
+		p {
+			margin: 0;
+			font-size: 1.1rem;
+			color: var(--muted);
+		}
+	</style>
+</head>
+<body>
+	<main>
+		<div class="badge">Frontend</div>
+		<h1>{{ message }}</h1>
+		<p>{{ title }}</p>
+	</main>
+</body>
+</html>
