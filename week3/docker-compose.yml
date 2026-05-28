@@ -1,0 +1,21 @@
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: ./week3/backend/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      LLM_MODEL: llama3.1
+      OLLAMA_URL: http://host.docker.internal:11434
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: ./week3/frontend/Dockerfile
+    environment:
+      BACKEND_URL: http://127.0.0.1:8000
+    depends_on:
+      - backend
+    ports:
+      - "3000:8000"
