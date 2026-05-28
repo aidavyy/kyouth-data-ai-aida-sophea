@@ -8,6 +8,8 @@ services:
     environment:
       LLM_MODEL: llama3.1
       OLLAMA_URL: http://host.docker.internal:11434
+    networks:
+      - week3-network
 
   frontend:
     build:
@@ -19,3 +21,9 @@ services:
       - backend
     ports:
       - "3000:8000"
+    networks:
+      - week3-network
+
+networks:
+  week3-network:
+    driver: bridge

@@ -9,9 +9,9 @@ from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 
 week2_paths = [
-	Path(__file__).resolve().parent.parent.parent.parent / "week2",
-	Path(__file__).resolve().parent.parent.parent / "week2",
-	Path(__file__).resolve().parent.parent / "week2",
+	Path(__file__).resolve().parent.parent.parent.parent / "week2", # For when running from backend/
+	Path(__file__).resolve().parent.parent.parent / "week2", # For when running from backend/src/
+	Path(__file__).resolve().parent.parent / "week2", # For when running from backend/src/app.py
 ]
 for week2_path in week2_paths:
 	if week2_path.exists() and str(week2_path) not in sys.path:

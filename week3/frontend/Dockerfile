@@ -25,6 +25,7 @@ RUN apt-get update \
 	file \
 	&& rm -rf /var/lib/apt/lists/*
 
+# Copy frontend source files into /app
 COPY week3/frontend/src ./src
 
 EXPOSE 8000

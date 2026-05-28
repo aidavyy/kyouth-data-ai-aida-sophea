@@ -25,7 +25,7 @@ RUN apt-get update \
 	file \
 	&& rm -rf /var/lib/apt/lists/*
 
-# Copy backend source files
+# Copy backend source files into /app
 COPY week3/backend/src ./src
 
 # Copy week2 code so backend can import prompt_model
