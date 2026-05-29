@@ -1,0 +1,17 @@
+# Secrets and local config
+**/.env
+**/.env.*
+!**/.env.example
+
+# Python virtual environments and caches
+**/.venv/
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+
+# Misc local artifacts
+**/*.log
+.git/
+.DS_Store
